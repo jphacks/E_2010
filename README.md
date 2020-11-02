@@ -53,7 +53,13 @@ pip install django djangorestframework
 python3 manage.py migrate
 ```
 
-2. Run
+2. build react
+```
+cd frontend/lunch-frontend
+PUBLIC_URL=lunch-frontend/build/ npm run-script build
+```
+
+3. Run
 ```
 python3 manage.py runserver
 ```
