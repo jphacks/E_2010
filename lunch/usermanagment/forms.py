@@ -2,8 +2,6 @@
 # from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import forms as auth_forms
 
-from django.contrib.auth import forms as auth_forms
-
 class LoginForm(auth_forms.AuthenticationForm):
     '''ログインフォーム'''
     def __init__(self, *args, **kw):

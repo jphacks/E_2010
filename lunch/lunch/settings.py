@@ -38,10 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usermanagment',
-    'lunch',
+    # 'usermanagment',
+    # 'lunch',
+    'users',
     'rest_framework',
-    'frontend',
+    'frontend'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,5 @@ STATICFILES_DIRS = [
 LOGIN_URL = 'login' # ログインしていないときのリダイレクト先
 LOGIN_REDIRECT_URL = 'index' # ログイン後のリダイレクト先
 LOGOUT_REDIRECT_URL = 'index' # ログアウト後のリダイレクト先
+
+AUTH_USER_MODEL = 'users.User'

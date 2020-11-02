@@ -40,17 +40,27 @@ def loginform(request):
         return redirect('login/login.html')
         # return  render(request,"login.html",context={"msg":"Need User name and Password"})
 
-class MyLoginView(LoginView):
-    form_class = forms.LoginForm
-    template_name = "login/login.html"
+# class RegisterProfile(APIView):
+#     """
+#     List all snippets, or create a new snippet.
+#     """
+#     def get(self, request, format=None):
+#         snippets = Profile.objects.all()
+#         serializer = ProfileSerializer
+#         return Response({"test": "Hello!"})
 
-class MyLogoutView(LoginRequiredMixin, LogoutView):
-    template_name = "logout/logout.html"
 
-class IndexView(TemplateView):
-    template_name = "index.html"
+# class MyLoginView(LoginView):
+#     form_class = forms.LoginForm
+#     template_name = "login/login.html"
 
-class UserCreateView(CreateView):
-    form_class = UserCreationForm
-    template_name = "create/create.html"
-    success_url = reverse_lazy("login")
+# class MyLogoutView(LoginRequiredMixin, LogoutView):
+#     template_name = "logout/logout.html"
+
+# class IndexView(TemplateView):
+#     template_name = "index.html"
+
+# class UserCreateView(CreateView):
+#     form_class = UserCreationForm
+#     template_name = "create/create.html"
+#     success_url = reverse_lazy("login")
