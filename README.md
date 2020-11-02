@@ -53,6 +53,11 @@ pip install django djangorestframework
 python3 manage.py migrate
 ```
 
+2. install package
+```
+npm install
+```
+
 2. build react
 ```
 cd frontend/lunch-frontend
