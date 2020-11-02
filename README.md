@@ -39,3 +39,22 @@
 #### 製品に取り入れた研究内容（データ・ソフトウェアなど）（※アカデミック部門の場合のみ提出必須）
 * 
 * 
+
+## 開発
+* Django
+First time
+
+```
+pip install django djangorestframework
+```
+
+1. Migration
+```
+python3 manage.py migrate
+```
+
+2. Run
+```
+python3 manage.py runserver
+```
+
