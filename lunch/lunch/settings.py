@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'lunch',
     'rest_framework',
     'frontend',
+    'backend',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
-        'NAME': 'django',
+        'NAME': 'lunch',
         'USER': 'root',
         'PASSWORD': 'pass',
     }
