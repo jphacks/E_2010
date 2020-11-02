@@ -1,8 +1,17 @@
 from .models import Profile
 from .serializers import ProfileSerializer
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
+class RegisterProfile(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
 
-class RegisterProfile(generics.ListCreateAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    def get(self, request, format=None):
+        snippets = Profile.objects.all()
+        serializer = ProfileSerializer
+        return Response({"test": "Hello!"})
+    
+    # def post...
