@@ -15,13 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls.conf import re_path
+from . import views
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-# ]
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('usermanagment.urls')),
-    path('', include('frontend.urls')),
-    path(r'^.*$', include('frontend.urls')),
+    path('api/profile/register', views.RegisterProfile.as_view()),
+    # path('', include('usermanagment.urls')),
+    re_path('^.*$', include('frontend.urls')),
 ]
