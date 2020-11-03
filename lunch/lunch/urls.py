@@ -21,6 +21,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/profile/register', views.RegisterProfile.as_view()),
-    path('api/profile/', include('users.urls')),
+    path('api/', include('users.urls')),
     # re_path('^.*$', include('frontend.urls')),
 ]
