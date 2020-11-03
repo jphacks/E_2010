@@ -8,7 +8,6 @@ from django import forms
 
 class UserManager(BaseUserManager):
     def _create_user(self,username,password,email,**kwargs):
-        print(username)
         if not password:
             raise ValueError("need password")
         if not username:
@@ -32,7 +31,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.CharField(max_length=100, unique=True)
     username = models.CharField(max_length=100, unique=True)
-    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    password = models.CharField(max_length=200, null=True)
     university = models.CharField(max_length=100)
     research = models.TextField(max_length=300)
     STATUS_GENDER = (
@@ -45,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     position = models.CharField(max_length=100)
     self_introduction = models.TextField(max_length=300)
     birthday = models.DateField(null=True, blank=True)
-
+    is_active = models.BooleanField(default=True)
     objects = UserManager()
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'password']
