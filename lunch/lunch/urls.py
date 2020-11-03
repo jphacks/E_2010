@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.urls.conf import re_path
-from . import views
+from django.conf.urls import url, include
+from backend.views import RegisterUser
+from backend.urls import router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/profile/register', views.RegisterProfile.as_view()),
-    # path('', include('usermanagment.urls')),
+    # path('api/user/register', RegisterUser.as_view()),
+    url(r'api/', include(router.urls)),
     re_path('^.*$', include('frontend.urls')),
 ]

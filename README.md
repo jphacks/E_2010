@@ -45,16 +45,43 @@
 First time
 
 ```
-pip install django djangorestframework
+pip install -r requirements.txt
 ```
 
 1. Migration
 ```
+mysql -u<username> -p<password>
+mysql> create database lunch;
+
 python3 manage.py migrate
 ```
 
-2. Run
+2. install package (js)
+```
+cd frontend/lunch-frontend
+npm install
+```
+
+2. build react
+```
+PUBLIC_URL=lunch-frontend/build/ npm run-script build
+```
+
+3. Run
 ```
 python3 manage.py runserver
 ```
 
+4. Access
+```
+curl http://localhost:8000
+curl http://localhost:8000/admin
+curl http://localhost:8000/api
+curl http://localhost:8000/api/tests
+curl http://localhost:8000/api/users/1
+curl -X POST -H "Content-Type: application/json" -d '{"hoge":"fuga"}' http://localhost:8000/api/tests
+```
+- admin ページにはスーパーユーザが必要
+```
+python manage.py createsuperuser
+```
