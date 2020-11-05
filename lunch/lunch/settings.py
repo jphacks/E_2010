@@ -1,3 +1,5 @@
+DEBUG = False
+
 """
 Django settings for lunch project.
 
@@ -21,32 +23,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '2bj6&s%-0&@pzxm$lveyh+6^=md_@8!^s3e7a2uufky67)wmg&'
+# SECRET_KEY = '2bj6&s%-0&@pzxm$lveyh+6^=md_@8!^s3e7a2uufky67)wmg&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usermanagment',
-    'lunch',
     'rest_framework',
     'frontend',
-    'backend',
     'users',
 ]
 
+# add
+AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    # https://qiita.com/checche/items/b705a8a2c6e7858d203a
+  'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+}
+
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,8 +69,7 @@ ROOT_URLCONF = 'lunch.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [],
-        'DIRS': [BASE_DIR, 'frontend/lunch-frontend'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,15 +88,15 @@ WSGI_APPLICATION = 'lunch.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'NAME': 'lunch',
-        'USER': 'root',
-        'PASSWORD': 'pass',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': '127.0.0.1',
+#         'NAME': 'lunch',
+#         'USER': 'root',
+#         'PASSWORD': 'pass',
+#     }
+# }
 
 
 # Password validation
@@ -114,9 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -128,12 +135,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/lunch-frontend/build/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend/lunch-frontend/build'),
+    BASE_DIR / 'frontend/lunch-frontend/build/static',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 LOGIN_URL = 'login' # ログインしていないときのリダイレクト先
 LOGIN_REDIRECT_URL = 'index' # ログイン後のリダイレクト先
 LOGOUT_REDIRECT_URL = 'index' # ログアウト後のリダイレクト先
+
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
+if not DEBUG:
+    SECRET_KEY = os.environ['SECRET_KEY']
+    import django_heroku
+    django_heroku.settings(locals())

@@ -16,13 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.urls.conf import re_path
-from django.conf.urls import url, include
-from backend.views import RegisterUser
-from backend.urls import router
+from django.conf.urls import url
+from rest_framework.documentation import include_docs_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/user/register', RegisterUser.as_view()),
-    url(r'api/', include(router.urls)),
     re_path('^.*$', include('frontend.urls')),
+    path('api/', include('users.urls')),
+    path('', include('frontend.urls')),
+    path('docs/', include_docs_urls(title='LLL API', description='Web API for Lunch Link Learning')),
 ]

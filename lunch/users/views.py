@@ -7,6 +7,9 @@ from rest_framework.response import Response
 import json
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
+from rest_framework import viewsets
+from .models import User
+from .serializers import UserSerializer
 
 # User = get_user_model()
 class RegisterProfile(APIView):
@@ -56,3 +59,8 @@ class LoginView(APIView):
     def get(self, request):
         return Response("Get NOT ALLOWED")
 #{ "email": "hogehoge@hoge.com" ,"username": "hogdaedahoge",  "password": "hogehoge" }
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
