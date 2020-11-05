@@ -64,7 +64,7 @@ npm install
 
 2. build react
 ```
-PUBLIC_URL=lunch-frontend/build/ npm run-script build
+npm run-script build
 ```
 
 3. Run

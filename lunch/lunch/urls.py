@@ -22,9 +22,7 @@ from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/user/register', RegisterUser.as_view()),
-    re_path('^.*$', include('frontend.urls')),
-    path('api/', include('users.urls')),
-    path('', include('frontend.urls')),
     path('docs/', include_docs_urls(title='LLL API', description='Web API for Lunch Link Learning')),
+    path('api/', include('users.urls')),
+    re_path('^.*$', include('frontend.urls')),
 ]

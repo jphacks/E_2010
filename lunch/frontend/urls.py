@@ -5,6 +5,5 @@ from . import views
 from django.conf import settings
 
 urlpatterns = [
-    # path('', views.index),
-    # re_path('^.*$', views.index),
+    re_path('^.*$', views.index),
 ]
