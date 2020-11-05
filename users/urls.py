@@ -14,5 +14,7 @@ urlpatterns = [
     path('signup/<int:pk>/', views.RegisterProfile.as_view()),
     path('login/', views.LoginView.as_view()),
     path('login/<int:pk>/', views.LoginView.as_view()),
+    path('usermanager/', views.UserManagmentView.as_view()),
+    path('usermanager/<int:pk>/', views.UserManagmentView.as_view()),
     url(r'^users/', include(router.urls)),
 ]
