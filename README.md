@@ -87,3 +87,5 @@ python manage.py createsuperuser
 
 - デプロイ
   - https://qiita.com/frosty/items/66f5dff8fc723387108c
+  - アプリ消した後同じ名前のものをすぐ作るとおかしくなる（設定が残ったままになってる？）
+  - `heroku apps:destroy --app <appname>`
