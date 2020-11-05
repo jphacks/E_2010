@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import logging
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
