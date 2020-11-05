@@ -85,3 +85,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"hoge":"fuga"}' http://loc
 ```
 python manage.py createsuperuser
 ```
+
+- デプロイ
+  - https://qiita.com/frosty/items/66f5dff8fc723387108c
+  
