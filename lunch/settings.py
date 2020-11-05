@@ -88,15 +88,15 @@ WSGI_APPLICATION = 'lunch.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'NAME': 'lunch',
-        'USER': 'root',
-        'PASSWORD': 'pass',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': '127.0.0.1',
+#         'NAME': 'lunch',
+#         'USER': 'root',
+#         'PASSWORD': 'pass',
+#     }
+# }
 
 
 # Password validation
