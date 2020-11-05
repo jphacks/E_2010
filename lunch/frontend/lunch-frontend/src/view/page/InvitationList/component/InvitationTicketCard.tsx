@@ -119,6 +119,7 @@ const useStyles = makeStyles((theme) => ({
     filter: "drop-shadow(0 3px 5px green)",
     transition: "all .3s",
     zIndex: 10,
+    pointerEvent: "none",
   },
 
   cardInnerAnimcation: {

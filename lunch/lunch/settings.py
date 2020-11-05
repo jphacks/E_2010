@@ -86,7 +86,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'NAME': 'lunch',
         'USER': 'root',
-        'PASSWORD': '2150MySQL!',
+        'PASSWORD': 'pass',
     }
 }
 
