@@ -64,7 +64,8 @@ npm install
 
 2. build react
 ```
-PUBLIC_URL=lunch-frontend/build/ npm run-script build
+cd frontend/lunch-frontend
+npm run-script build
 ```
 
 3. Run
@@ -76,12 +77,13 @@ python3 manage.py runserver
 ```
 curl http://localhost:8000
 curl http://localhost:8000/admin
-curl http://localhost:8000/api
-curl http://localhost:8000/api/tests
-curl http://localhost:8000/api/users/1
-curl -X POST -H "Content-Type: application/json" -d '{"hoge":"fuga"}' http://localhost:8000/api/tests
+curl http://localhost:8000/api/users/
+curl http://localhost:8000/api/users/1/
 ```
 - admin ページにはスーパーユーザが必要
 ```
 python manage.py createsuperuser
 ```
+
+- デプロイ
+  - https://qiita.com/frosty/items/66f5dff8fc723387108c
