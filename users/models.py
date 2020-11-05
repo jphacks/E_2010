@@ -86,7 +86,7 @@ class UserManager(BaseUserManager):
         password."""
         if not email:
             raise ValueError('The given email must be set')
-        email = self.normalize_email(email)
+        email = self.normalize_email(email) #BaseUserManager に定義されている
   
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -133,6 +133,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    university = models.CharField(max_length=100)
+    research = models.TextField(max_length=300, null=True, blank=True)
+    
+    STATUS_GENDER = (
+        ('male', '男'),
+        ('female', '女'),
+        ('other', 'その他'),
+    )
+    gender = models.CharField(choices=STATUS_GENDER, default='male', max_length=10)
+    age = models.PositiveSmallIntegerField(null=True, blank=True)
+    position = models.CharField(max_length=100)
+    self_introduction = models.TextField(max_length=300, null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
   
     objects = UserManager()
   
