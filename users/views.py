@@ -108,4 +108,47 @@ class UserManagmentView(APIView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
+
+
+class Approve(APIView):
+    def post(self, request):
+        datas = json.loads(request.body)
+        invitation = datas['invitationid']
+        applicant = datas['applicantid']
+        # Apply = Application.Manager()
+        # print(invitationID)
+        # print(applicantid)
+        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'approve')    #should only do update
+        return JsonResponse({"hoge": "hoge"})
+
+    # def get(self, request):
+    #     return Response({"404": "GET NOT ALLOWED"})
+
+class Apply(APIView):
+    def post(self, request):
+        datas = json.loads(request.body)
+        invitation = datas['invitationid']
+        applicant = datas['applicantid']
+        # Apply = Application.Manager()
+        # print(invitationID)
+        # print(applicantid)
+        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'pending')
+        return JsonResponse({"hoge": "hoge"})
+
+    # def get(self, request):
+    #     return Response({"404": "GET NOT ALLOWED"})
+
+class Deny(APIView):
+    def post(self, request):
+        datas = json.loads(request.body)
+        invitation = datas['invitationid']
+        applicant = datas['applicantid']
+        # Apply = Application.Manager()
+        # print(invitationID)
+        # print(applicantid)
+        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'deny')     #should only do update
+        return JsonResponse({"hoge": "hoge"})
+
+    # def get(self, request):
+    #     return Response({"404": "GET NOT ALLOWED"})
+#{"invitationid": "22", "applicantid": "33"}

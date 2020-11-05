@@ -170,3 +170,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+class Application(models.Model):
+    # posterid = models.CharField(max_length=128)    #userid
+    invitationid = models.CharField(max_length=128)    #contentid
+    applicantid = models.CharField(max_length=128)    #applicantid
+    ApplyStatus = (
+      ('pending', '1'),
+      ('approve', '2'),
+      ('deny', '3'),)
+    Status = models.CharField(choices=ApplyStatus, max_length=10)

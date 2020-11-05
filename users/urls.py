@@ -14,5 +14,11 @@ urlpatterns = [
     # path('signup/<int:pk>/', views.RegisterProfile.as_view()),
     # path('login/', views.LoginView.as_view()),
     # path('login/<int:pk>/', views.LoginView.as_view()),
+    path(r'^invitation/(\d+)/approv/$', views.Approve.as_view()),
+
+    path(r'^invitation/(\d+)/apply/$', views.Apply.as_view()),
+
+    url(r'^invitation/(\d+)/deny/$', views.Deny.as_view()),
+    
     url(r'^users/', include(router.urls)),
 ]
