@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/App.css"],"names":[],"mappings":"AAAA,KACE,uBAAwB,CACxB,kBACF,CAEA,EACE,qBACF","file":"main.8be0221c.chunk.css","sourcesContent":["body{\n  font-family: \"M PLUS 1p\";\n  background: #f7f7f7;\n}\n\n* {\n  box-sizing: border-box;\n}"]}
