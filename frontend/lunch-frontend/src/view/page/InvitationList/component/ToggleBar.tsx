@@ -1,6 +1,8 @@
 import { makeStyles } from '@material-ui/core'
 import React from 'react'
 import InvitationFilterType from '../../../model/InvitationFilterType'
+import { BiPlus } from 'react-icons/bi'
+import { useHistory } from 'react-router-dom'
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -56,6 +58,7 @@ type Props = {
 
 const ToggleBar: React.FC<Props> = ({ filterType, handleChangeTab }) => {
   const c = useStyle()
+  const history = useHistory()
 
   
   return (
@@ -65,6 +68,11 @@ const ToggleBar: React.FC<Props> = ({ filterType, handleChangeTab }) => {
         <div className={c.menuItem + (filterType === "applied" ? " selected" : "")} onClick={() => handleChangeTab("applied")}>応募済み</div>
         <div className={c.menuItem + (filterType === "mine" ? " selected" : "")} onClick={() => handleChangeTab("mine")}>自分の投稿</div>
         <div className={c.menuItem + (filterType === "approved" ? " selected" : "")} onClick={() => handleChangeTab("approved")}>成立済み</div>
+      </div>
+      <div className={c.group}>
+        <div className={c.menuItem} onClick={() => history.push("/invitations/create")}>
+          <BiPlus className={c.icon}/>
+        </div>
       </div>
     </div>
   )

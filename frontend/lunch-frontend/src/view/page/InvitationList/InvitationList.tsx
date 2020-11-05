@@ -11,6 +11,9 @@ import InvitationCard from './component/InvitationTicketCard'
 import ToggleBar from './component/ToggleBar'
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    paddingTop: theme.spacing(2),
+  },
   emptyMessageArea: {
     height: "100vh",
     display: "flex",
@@ -90,7 +93,7 @@ const InvitationList = () => {
 
   return (
     <>
-      <div>
+      <div className={c.root}>
         {invitations.map((invitation, i) => <InvitationCard order={i} beforeClose={beforeClose} key={invitation.id} invitaion={invitation} />)}
         {
           invitations.length === 0 && <div className={c.emptyMessageArea}><p>該当する投稿はありません</p></div>
