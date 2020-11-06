@@ -42,15 +42,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'frontend',
-    'users',
+    # 'users',
+    # 'invitations',
+    'api',
+    'django_filters',  # 追加
 ]
 
 # add
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'api.User'
 
 REST_FRAMEWORK = {
     # https://qiita.com/checche/items/b705a8a2c6e7858d203a
   'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+  'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 MIDDLEWARE = [
@@ -88,6 +92,7 @@ WSGI_APPLICATION = 'lunch.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# local_settings.py に移動
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
