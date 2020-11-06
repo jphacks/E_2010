@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers, validators
 
-from .models import User, Invitation
+from .models import User, Invitation, Application
 
 
 class UserSerializer(serializers.ModelSerializer):

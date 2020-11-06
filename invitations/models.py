@@ -13,3 +13,13 @@ class Invitation(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     tags = models.CharField(max_length=100, null=True, blank=True)
     is_accepted = models.BooleanField(default=False)
+
+class Application(models.Model):
+    # posterid = models.CharField(max_length=128)    #userid
+    invitationid = models.CharField(max_length=128)    #contentid
+    applicantid = models.CharField(max_length=128)    #applicantid
+    ApplyStatus = (
+      ('pending', '承認まち'),
+      ('approve', '承認済み'),
+      ('deny', '拒否'),)
+    Status = models.CharField(choices=ApplyStatus, max_length=10)

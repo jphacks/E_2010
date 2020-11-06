@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import User, Invitation
+from .models import User, Invitation, Application
 from .serializers import UserSerializer, InvitationSerializer
 
 
@@ -48,3 +48,50 @@ class InvitationViewSet(viewsets.ModelViewSet):
         inv.save()
         print(inv)
         return Response('canceled!')
+
+
+# class ApplicationViewSet(viewsets.ModelViewSet):
+#     queryset = Application.objects.all()
+
+class Approve(APIView):
+    def post(self, request):
+        datas = json.loads(request.body)
+        invitation = datas['invitationid']
+        applicant = datas['applicantid']
+        # Apply = Application.Manager()
+        # print(invitationID)
+        # print(applicantid)
+        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'approve')    #should only do update
+        return JsonResponse({"hoge": "hoge"})
+
+    # def get(self, request):
+    #     return Response({"404": "GET NOT ALLOWED"})
+
+class Apply(APIView):
+    def post(self, request):
+        datas = json.loads(request.body)
+        invitation = datas['invitationid']
+        applicant = datas['applicantid']
+        # Apply = Application.Manager()
+        # print(invitationID)
+        # print(applicantid)
+        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'pending')
+        return JsonResponse({"hoge": "hoge"})
+
+    # def get(self, request):
+    #     return Response({"404": "GET NOT ALLOWED"})
+
+class Deny(APIView):
+    def post(self, request):
+        datas = json.loads(request.body)
+        invitation = datas['invitationid']
+        applicant = datas['applicantid']
+        # Apply = Application.Manager()
+        # print(invitationID)
+        # print(applicantid)
+        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'deny')     #should only do update
+        return JsonResponse({"hoge": "hoge"})
+
+    # def get(self, request):
+    #     return Response({"404": "GET NOT ALLOWED"})
+#{"invitationid": "22", "applicantid": "33"}

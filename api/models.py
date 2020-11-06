@@ -128,3 +128,16 @@ class Invitation(models.Model):
 
 
 # Application ##############################################
+class Application(models.Model):
+    # authorid = models.CharField(max_length=128)    #userid
+    invitationid = models.CharField(max_length=128)    #contentid
+    applicantid = models.CharField(max_length=128)    #applicantid
+    ApplyStatus = (
+      ('pending', '承認待ち'),
+      ('approve', '承認済み'),
+      ('deny', '拒否'),)
+    Status = models.CharField(choices=ApplyStatus, max_length=10)
+    # USERNAME_FIELD = 'id' としたことによるエラーの対処法
+    # https://teratail.com/questions/98546
+    def __str__(self):
+        return str(self.id)
