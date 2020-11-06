@@ -44,7 +44,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
         fields = ('id', 'invitation', 'inv_id', 'applicant', 'status',)
 
     def create(self, validated_data):
-        print(invitation)
         validated_data['invitation'] = validated_data.get('inv_id', None)
         if validated_data['invitation'] is None:
             raise serializers.ValidationError("invitation not found")

@@ -53,22 +53,38 @@ class InvitationViewSet(viewsets.ModelViewSet):
 class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+    filter_fields = ('invitation', 'applicant', 'status',)
+
+    # select * from api_application where applicant=me and status=denied
     @action(methods=['post'], detail=True)
     def apply(self, request):
-        IsDenied = Application.objects.filter(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant)
+        # もしなかったら
+            # 作成する
+        # もしあったら
+        IsDenied = Application.objects.filter(invitation = self.get_object().invitation, applicantid = self.get_object().applicant)
         if IsDenied.status == 'denied':
             return Response('This User is denied for this Invitation')    #deniedされたユーザを拒否する
-        Application.objects.create(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant, status = 'applied')
+        Application.objects.create(invitation = self.get_object().invitation, applicantid = self.get_object().applicant, status = 'applied')
         return Response('applied!')
 
-    @action(methods=['post'], detail=True)
-    def approv(self, request):
-        SqlInstance = Application.objects.filter(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant)
-        SqlInstance.status = 'accepted'
+    @action(methods=['put'], detail=True)
+    def accept(self, request, pk=None):
+        app = Application.objects.filter(id = self.get_object().id).first()
+        app.status = 'accepted'
+        app.save()
         return Response('accepted!')
 
-    @action(methods=['post'], detail=True)
-    def denied(self, request):
-        SqlInstance = Application.objects.filter(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant)
-        SqlInstance.status = 'denied'
+    @action(methods=['put'], detail=True)
+    def deny(self, request, pk=None):
+        app = Application.objects.filter(id = self.get_object().id).first()
+        app.status = 'denied'
+        app.save()
         return Response('denied!')
+
+# Application Table
+# |id|invitaion|applicant|status|
+# |1|1         |2        |applied|
+# |2|1         |3        |applied|
+
+# GET /api/applications/ -> all
+# GET /api/applications/?invitaion=1/ -> 
