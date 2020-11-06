@@ -1,16 +1,26 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 from .models import User, Invitation, Application
 from .serializers import UserSerializer, InvitationSerializer, ApplicationSerializer
 
+import json
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_fields = ('email',)
 
+    @action(methods=['post'], detail=True)
+    def login(self, request, pk=None):
+        datas = json.loads(request.body)
+        emailAdd = datas['email']
+        Result = User.objects.filter(email=emailAdd).first()
+        print(Result.id)
+        
+        return JsonResponse({'UserID': Result.id})
 
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = Invitation.objects.all()
