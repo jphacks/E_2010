@@ -80,23 +80,29 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         # IsDenied = Application.objects.filter(invitation = invitationID, applicant = applicantID).first()
         IsDenied = Application.objects.filter(invitation_id = invitationID, applicant_id = applicantID).first()
         print("Isdenied: ", IsDenied)
-        if Author.author_id == applicantID:
-            return Response('You can not apply the Invitation that post by youself')
-        if IsDenied.status == 'denied':
-            return Response('This User is denied for this Invitation')    #deniedされたユーザを拒否する
-        if IsDenied.status == 'applied' or IsDenied.status == 'accepted':
-            return Response('This User is already applied for this Invitation. ')
-        Application.objects.create(invitation = invitationID, applicant = applicantID, status = 'applied')
+        if IsDenied:
+            if IsDenied.status == 'denied':
+                return Response('This User is denied for this Invitation')    #deniedされたユーザを拒否する
+            if IsDenied.status == 'applied' or IsDenied.status == 'accepted':
+                return Response('This User is already applied for this Invitation. ')
+        else:
+            if Author.author_id == applicantID:
+                return Response('You can not apply the Invitation that post by youself')
+        print('dada')
+        # Application.objects.create(invitation = invitationID, applicant = applicantID, status = 'applied')
+        Application.objects.create(invitation_id = invitationID, applicant_id = applicantID, status = 'applied')
         return Response('applied!')
 
     @action(methods=['put'], detail=True)
     def accept(self, request, pk=None):
-        
+
         datas = json.loads(request.body)
         applicantID = datas['applicant']
         invitationID = datas['inv_id']
 
-        app = Application.objects.filter(id = self.get_object().id).first()
+        # app = Application.objects.filter(id = self.get_object().id).first()
+        # app = Application.objects.create(invitation = invitationID, applicant = applicantID, status = 'applied')
+        app = Application.objects.filter(invitation_id = invitationID, applicant_id = applicantID).first()
         if app.status == 'denied':
             return Response('This User is denied for this Invitation')    #deniedされたユーザを拒否する
         app.status = 'accepted'
@@ -105,14 +111,25 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
     @action(methods=['put'], detail=True)
     def deny(self, request, pk=None):
-        app = Application.objects.filter(id = self.get_object().id).first()
+        datas = json.loads(request.body)
+        applicantID = datas['applicant']
+        invitationID = datas['inv_id']
+        # app = Application.objects.filter(id = self.get_object().id).first()
+        #app = Application.objects.create(invitation = invitationID, applicant = applicantID, status = 'applied')
+        app = Application.objects.filter(invitation_id = invitationID, applicant_id = applicantID).first()
         app.status = 'denied'
         app.save()
         return Response('denied!')
 
     @action(methods=['put'], detail=True)
     def delete(self, request, pk=None):
-        app = Application.objects.filter(id = self.get_object().id).first()
+        datas = json.loads(request.body)
+        applicantID = datas['applicant']
+        invitationID = datas['inv_id']
+        # app = Application.objects.filter(id = self.get_object().id).first()
+        #app = Application.objects.create(invitation = invitationID, applicant = applicantID, status = 'applied')
+        app = Application.objects.filter(invitation_id = invitationID, applicant_id = applicantID).first()
+        app.status = 'denied'
         app.delete()
         return Response('canceled!')
 
