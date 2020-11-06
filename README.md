@@ -86,6 +86,9 @@ python manage.py createsuperuser
 ```
 
 - デプロイ
+  - `local_settings.py` を作り、開発用、本番用で設定を分ける
+  - `heroku config:set SECRET_KEY=xxxx`
   - https://qiita.com/frosty/items/66f5dff8fc723387108c
   - アプリ消した後同じ名前のものをすぐ作るとおかしくなる（設定が残ったままになってる？）
-  - `heroku apps:destroy --app <appname>`
+  - Web から消すとGitの設定が残るので `git remote rm heroku` する
+  - `heroku apps:destroy --app <appname>` だとGitも消える
