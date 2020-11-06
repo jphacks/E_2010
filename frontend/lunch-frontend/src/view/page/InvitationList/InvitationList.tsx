@@ -1,14 +1,16 @@
 import { makeStyles } from '@material-ui/core'
-import { DateTime } from 'luxon'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import useSWR from 'swr'
 import Invitation from '../../../models/invitation'
-import InvitationStatus from '../../../models/invitationStatus'
 import MyInvitation from '../../../models/myInvitation'
 import useQuery from '../../hooks/useQuery'
-import InvitationFilterType from '../../model/InvitationFilterType'
+import InvitationFilterType from '../../types/InvitationFilterType'
 import InvitationCard from './component/InvitationTicketCard'
 import ToggleBar from './component/ToggleBar'
+import { useRecoilValue } from 'recoil'
+import appUserAtom from '../../../interactor/appUser'
+import { fetchInvitationList, fetchMyInvitationList } from '../../../fetcher/invitationFetchers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,60 +30,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const invitationBuilder: (id: string, status: InvitationStatus) => Invitation = (id, status) => ({
-  id,
-  hostProfile: {
-    name: "山田太郎",
-    university: "東京大学",
-    research: "VRについて研究しています",
-    gender: "男",
-    age: 22,
-    position: "院生",
-    selfIntroduction: "好きな食べ物はハンバーグです。",
-    birthday: DateTime.local(1998, 2, 27),
-  },
-  content: status + "一緒に晩ご飯を食べてくれる人を募集しています。ひとりぼっちになりたくないので助けてください。",
-  date: "11/7 午後6時ごろ",
-  place: "〇〇食堂",
-  tag: ["tagA", "tagB"],
-  createdat: DateTime.local(),
-  status
-})
-
-const MY_INVITATION: MyInvitation = {
-  id: "mine0",
-  applicants: Array(3).fill({
-    name: "山田太郎",
-    university: "東京大学",
-    research: "VRについて研究しています",
-    gender: "男",
-    age: 22,
-    position: "院生",
-    selfIntroduction: "好きな食べ物はハンバーグです。",
-    birthday: DateTime.local(1998, 2, 27),
-  }),
-  content: "一緒に晩ご飯を食べてくれる人を募集しています。ひとりぼっちになりたくないので助けてください。",
-  date: "11/7 午後6時ごろ",
-  place: "〇〇食堂",
-  tag: ["tagA", "tagB"],
-  createdat: DateTime.local(),
-  status: "mine",
-}
-
-const SAMPLE_INVITATIONS = [
-    ...(["default", "approved", "denied", "applied"] as InvitationStatus[])
-    .map((status) => Array(5).fill(null).map((_, i) => invitationBuilder(`${status}${i}`, status)))
-    .flat(2),
-    MY_INVITATION
-  ]
-
 const InvitationList = () => {
   const c = useStyles()
   const history = useHistory()
   
   const filterType = (useQuery().get("filter") ?? "default") as InvitationFilterType
-  const invitations = SAMPLE_INVITATIONS.filter(({status}) => status === filterType)
-
+  
   const [beforeClose, setBeforeClose] = useState(false)
   const handleChangeTab = (filterType: InvitationFilterType) => {
     setBeforeClose(true)
@@ -90,16 +44,41 @@ const InvitationList = () => {
       setBeforeClose(false)
     }, 500)
   }
+  
+  return (
+    <>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className={c.root}>
+          <InvitationListInner filterType={filterType} beforeClose={beforeClose}/>
+        </div>
+      </Suspense>
+      <ToggleBar filterType={filterType} handleChangeTab={handleChangeTab}/>
+    </>
+  )
+}
+
+type InnerProps = {
+  filterType: InvitationFilterType
+  beforeClose: boolean
+}
+
+const InvitationListInner: React.FC<InnerProps> = ({ filterType, beforeClose }) => {
+  const c = useStyles()
+  const appUser = useRecoilValue(appUserAtom)
+  if(appUser == null) throw new Error()
+  
+  const { data: invitations } = useSWR<(Invitation | MyInvitation)[]>("/invitations/list", fetchInvitationList(appUser.id), { suspense: true })
+  const { data: myInvitations } = useSWR<(Invitation | MyInvitation)[]>("/invitations/self", fetchMyInvitationList(appUser.id), { suspense: true })
+  
+  const filteredInvitations =
+    filterType === "mine" ? myInvitations ?? [] : invitations?.filter(({ status }) => status === filterType) ?? []
 
   return (
     <>
-      <div className={c.root}>
-        {invitations.map((invitation, i) => <InvitationCard order={i} beforeClose={beforeClose} key={invitation.id} invitaion={invitation} />)}
-        {
-          invitations.length === 0 && <div className={c.emptyMessageArea}><p>該当する投稿はありません</p></div>
-        }
-      </div>
-      <ToggleBar filterType={filterType} handleChangeTab={handleChangeTab}/>
+      {filteredInvitations.map((invitation, i) => <InvitationCard order={i} beforeClose={beforeClose} key={invitation.id} invitaion={invitation} />)}
+      {
+        filteredInvitations.length === 0 && <div className={c.emptyMessageArea}><p>該当する投稿はありません</p></div>
+      }
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import React from 'react'
-import InvitationFilterType from '../../../model/InvitationFilterType'
+import InvitationFilterType from '../../../types/InvitationFilterType'
 import { BiPlus } from 'react-icons/bi'
 import { useHistory } from 'react-router-dom'
 

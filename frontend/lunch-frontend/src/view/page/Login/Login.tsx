@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Field, { PasswordField } from '../../component/Field'
 import Button from '@material-ui/core/Button'
+import { useSetRecoilState } from 'recoil'
+import appUserAtom from '../../../interactor/appUser'
+import { login } from '../../../fetcher/userFetchers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,8 +34,14 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const c = useStyles()
 
+  const setAppUser = useSetRecoilState(appUserAtom)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const handleLogin = async () => {
+    const appUser = await login(email, password)
+    setAppUser(appUser)
+  }
 
   return (
     <div className={c.root}>
@@ -40,7 +49,7 @@ const Login = () => {
         <div>Welcome to Lunch Link Learning</div>
         <Field className={c.field} label="メールアドレス" value={email} onChange={e => setEmail(e.target.value)} fullWidth={true}/>
         <PasswordField className={c.field} label="パスワード" value={password} onChange={e => setPassword(e.target.value)} fullWidth={true}/>
-        <Button className={c.button} variant="outlined" color="primary" fullWidth={true}>ログイン</Button>
+        <Button className={c.button} variant="outlined" color="primary" fullWidth={true} onClick={handleLogin}>ログイン</Button>
       </div>
     </div>
   )
