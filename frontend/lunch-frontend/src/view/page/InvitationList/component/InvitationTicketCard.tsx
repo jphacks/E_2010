@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import Invitation from '../../../../models/invitation'
 import MyInvitation from '../../../../models/myInvitation'
 import forkImage from "../../../../asset/corn.png"
@@ -209,12 +209,12 @@ const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: 
             invitation.status === "mine" ? (
               <div className={c.applicantsArea}>{
                 invitation.applicants.map((profile, i) => (
-                  <>
-                    <ProfileCard key={i} profile={profile} className={c.profileCard + " " + c.profileListItem} />
+                  <Fragment key={i}>
+                    <ProfileCard profile={profile} className={c.profileCard + " " + c.profileListItem} />
                     <div className={c.approveButtonWrapper}>
                       <Button color="default" variant="contained" className={c.approveButton}>承認する</Button>
                     </div>
-                  </>
+                  </Fragment>
                 ))
               }</div>
             ) : (
@@ -228,7 +228,7 @@ const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: 
             </Button>
             {
               (invitation.status === "default" || invitation.status === "applied") &&
-              <Button onClick={() => setOpen(false)} color="primary" autoFocus>{
+              <Button onClick={() => setOpen(false)} color="primary">{
                 invitation.status === "default" ? "応募する" :
                 invitation.status === "applied" ? "応募キャンセル" : ""
               }</Button>

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import stamp from '../../../asset/stamp.png'
 import { MdClose } from 'react-icons/md'
+import { createInvitation } from '../../../fetcher/invitationFetchers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,15 +90,16 @@ const InvitationCreate = () => {
   const [date, setDate] = useState(DateTime.local().toFormat("yyyy-MM-dd"))
   const [tags, setTags] = useState("")
 
-  const handleSubmit = () => {
+  const history = useHistory()
+
+  const handleSubmit = async () => {
     if(canSubmit){
-      console.log("SUBMIT")
+      await createInvitation()
+      history.goBack()
     }
   }
 
   const canSubmit = title.length > 0 && date.length > 0 && place.length > 0
-
-  const history = useHistory()
 
   const handleCancel = () => history.goBack()
 
