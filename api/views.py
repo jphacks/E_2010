@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import User, Invitation, Application
-from .serializers import UserSerializer, InvitationSerializer
+from .serializers import UserSerializer, InvitationSerializer, ApplicationSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -22,16 +22,16 @@ class InvitationViewSet(viewsets.ModelViewSet):
         inv = self.get_object()
         return Response('{inv.date}'.format(inv=inv))
 
-    # 申請ボタンを押すと呼ばれる想定(PUT /inv/{id}/request/)
+    # 申請ボタンを押すと呼ばれる想定(PUT /api/invitations/{id}/request/)
     @action(methods=['put'], detail=True)
     def request(self, request, pk=None):
         inv = Invitation.objects.filter(id=self.get_object().id).first()
-        inv.status = 'requested'
+        inv.status = 'applied'
         inv.save()
         print(inv)
-        return Response('requested!')
+        return Response('applied!')
 
-    # 承認ボタンを押すと呼ばれる想定(PUT /inv/{id}/accept/)
+    # 承認ボタンを押すと呼ばれる想定(PUT /api/invitations/{id}/accept/)
     @action(methods=['put'], detail=True)
     def accept(self, request, pk=None):
         inv = Invitation.objects.filter(id=self.get_object().id).first()
@@ -40,7 +40,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         print(inv)
         return Response('accepted!')
 
-    # キャンセルボタンを押すと呼ばれる想定(PUT /inv/{id}/cancel/)
+    # キャンセルボタンを押すと呼ばれる想定(PUT /api/invitations/{id}/cancel/)
     @action(methods=['put'], detail=True)
     def cancel(self, request, pk=None):
         inv = Invitation.objects.filter(id=self.get_object().id).first()
@@ -50,48 +50,54 @@ class InvitationViewSet(viewsets.ModelViewSet):
         return Response('canceled!')
 
 
-# class ApplicationViewSet(viewsets.ModelViewSet):
-#     queryset = Application.objects.all()
+class ApplicationViewSet(viewsets.ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
 
-class Approve(APIView):
-    def post(self, request):
-        datas = json.loads(request.body)
-        invitation = datas['invitationid']
-        applicant = datas['applicantid']
-        # Apply = Application.Manager()
-        # print(invitationID)
-        # print(applicantid)
-        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'approve')    #should only do update
-        return JsonResponse({"hoge": "hoge"})
+    # 拒否ボタンを押すと呼ばれる想定(PUT /api/applications/{id}/deny/)
+    # @action(methods=['put'], detail=True)
+    # def deny(self, request, pk=None):
+    #     app = Application.objects.filter(id=self)
 
-    # def get(self, request):
-    #     return Response({"404": "GET NOT ALLOWED"})
+# class Approve(APIView):
+#     def post(self, request):
+#         datas = json.loads(request.body)
+#         invitation = datas['invitationid']
+#         applicant = datas['applicantid']
+#         # Apply = Application.Manager()
+#         # print(invitationID)
+#         # print(applicantid)
+#         Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'approve')    #should only do update
+#         return JsonResponse({"hoge": "hoge"})
 
-class Apply(APIView):
-    def post(self, request):
-        datas = json.loads(request.body)
-        invitation = datas['invitationid']
-        applicant = datas['applicantid']
-        # Apply = Application.Manager()
-        # print(invitationID)
-        # print(applicantid)
-        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'pending')
-        return JsonResponse({"hoge": "hoge"})
+#     # def get(self, request):
+#     #     return Response({"404": "GET NOT ALLOWED"})
 
-    # def get(self, request):
-    #     return Response({"404": "GET NOT ALLOWED"})
+# class Apply(APIView):
+#     def post(self, request):
+#         datas = json.loads(request.body)
+#         invitation = datas['invitationid']
+#         applicant = datas['applicantid']
+#         # Apply = Application.Manager()
+#         # print(invitationID)
+#         # print(applicantid)
+#         Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'pending')
+#         return JsonResponse({"hoge": "hoge"})
 
-class Deny(APIView):
-    def post(self, request):
-        datas = json.loads(request.body)
-        invitation = datas['invitationid']
-        applicant = datas['applicantid']
-        # Apply = Application.Manager()
-        # print(invitationID)
-        # print(applicantid)
-        Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'deny')     #should only do update
-        return JsonResponse({"hoge": "hoge"})
+#     # def get(self, request):
+#     #     return Response({"404": "GET NOT ALLOWED"})
 
-    # def get(self, request):
-    #     return Response({"404": "GET NOT ALLOWED"})
-#{"invitationid": "22", "applicantid": "33"}
+# class Deny(APIView):
+#     def post(self, request):
+#         datas = json.loads(request.body)
+#         invitation = datas['invitationid']
+#         applicant = datas['applicantid']
+#         # Apply = Application.Manager()
+#         # print(invitationID)
+#         # print(applicantid)
+#         Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'deny')     #should only do update
+#         return JsonResponse({"hoge": "hoge"})
+
+#     # def get(self, request):
+#     #     return Response({"404": "GET NOT ALLOWED"})
+# #{"invitationid": "22", "applicantid": "33"}

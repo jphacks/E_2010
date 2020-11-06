@@ -12,14 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
-class ApplicationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Application
-        fields = ('id', 'invitationid', 'applicantid', 'Status')
-        # extra_kwargs = {
-        #     'password': {'write_only': True},
-        # }
-
 
 # GET 時は User の中身を見たい、かつ POST 時は id だけ指定したい
 # https://sakataharumi.hatenablog.jp/entry/2018/10/20/010806
@@ -41,19 +33,21 @@ class InvitationSerializer(serializers.ModelSerializer):
         validated_data['status'] = 'seeking'
         return Invitation.objects.create(**validated_data)
 
+
 class ApplicationSerializer(serializers.ModelSerializer):
-    # ApplyID = ApplicationSerializer(read_only=True)
-    user_id = serializers.PrimaryKeyRelatedField(queryset=Application.objects.all(), write_only=True)
+    invitation = InvitationSerializer(read_only=True)
+    inv_id = serializers.PrimaryKeyRelatedField(queryset=Invitation.objects.all(), write_only=True)
+    
 
     class Meta:
         model = Application
-        fields = ('id', 'invitationid', 'applicantid', 'Status')
-        # read_only_fields = ('author', 'created_at', 'status',)
+        fields = ('id', 'invitation', 'inv_id', 'applicant', 'status',)
 
     def create(self, validated_data):
-        validated_data['id'] = validated_data.get('invitationid', None)
-        if validated_data['id'] is None:
+        print(invitation)
+        validated_data['invitation'] = validated_data.get('inv_id', None)
+        if validated_data['invitation'] is None:
             raise serializers.ValidationError("invitation not found")
-        del validated_data['invitationid']
-        validated_data['Status'] = 'seeking'
+        del validated_data['inv_id']
+        # validated_data['status'] = 'seeking'
         return Application.objects.create(**validated_data)

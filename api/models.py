@@ -88,7 +88,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['email']
-  
+
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
@@ -119,10 +119,13 @@ class Invitation(models.Model):
     
     STATUS = (
         ('seeking', '募集中'),
-        ('requested', '承認待ち'),
+        ('applied', '承認待ち'),
         ('accepted', '承認済み'),
     )
     status = models.CharField(choices=STATUS, default='seeking', max_length=10)
+
+    def __str__(self):
+        return str(self.id)
 
 ###########################################################
 
@@ -130,14 +133,12 @@ class Invitation(models.Model):
 # Application ##############################################
 class Application(models.Model):
     # authorid = models.CharField(max_length=128)    #userid
-    invitationid = models.CharField(max_length=128)    #contentid
-    applicantid = models.CharField(max_length=128)    #applicantid
-    ApplyStatus = (
-      ('pending', '承認待ち'),
-      ('approve', '承認済み'),
-      ('deny', '拒否'),)
-    Status = models.CharField(choices=ApplyStatus, max_length=10)
-    # USERNAME_FIELD = 'id' としたことによるエラーの対処法
-    # https://teratail.com/questions/98546
-    def __str__(self):
-        return str(self.id)
+    invitation = models.ForeignKey(Invitation, related_name='applications', on_delete=models.CASCADE)
+    applicant = models.ForeignKey(User, related_name='applications', on_delete=models.CASCADE)
+    APPLICATION_STATUS = (
+      ('applied', '承認待ち'),
+      ('accepted', '承認済み'),
+      ('denied', '拒否'),
+    )
+    status = models.CharField(choices=APPLICATION_STATUS, max_length=10)
+    
