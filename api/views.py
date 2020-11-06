@@ -53,51 +53,22 @@ class InvitationViewSet(viewsets.ModelViewSet):
 class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+    @action(methods=['post'], detail=True)
+    def apply(self, request):
+        IsDenied = Application.objects.filter(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant)
+        if IsDenied.status == 'denied':
+            return Response('This User is denied for this Invitation')    #deniedされたユーザを拒否する
+        Application.objects.create(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant, status = 'applied')
+        return Response('applied!')
 
-    # 拒否ボタンを押すと呼ばれる想定(PUT /api/applications/{id}/deny/)
-    # @action(methods=['put'], detail=True)
-    # def deny(self, request, pk=None):
-    #     app = Application.objects.filter(id=self)
+    @action(methods=['post'], detail=True)
+    def approv(self, request):
+        SqlInstance = Application.objects.filter(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant)
+        SqlInstance.status = 'accepted'
+        return Response('accepted!')
 
-# class Approve(APIView):
-#     def post(self, request):
-#         datas = json.loads(request.body)
-#         invitation = datas['invitationid']
-#         applicant = datas['applicantid']
-#         # Apply = Application.Manager()
-#         # print(invitationID)
-#         # print(applicantid)
-#         Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'approve')    #should only do update
-#         return JsonResponse({"hoge": "hoge"})
-
-#     # def get(self, request):
-#     #     return Response({"404": "GET NOT ALLOWED"})
-
-# class Apply(APIView):
-#     def post(self, request):
-#         datas = json.loads(request.body)
-#         invitation = datas['invitationid']
-#         applicant = datas['applicantid']
-#         # Apply = Application.Manager()
-#         # print(invitationID)
-#         # print(applicantid)
-#         Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'pending')
-#         return JsonResponse({"hoge": "hoge"})
-
-#     # def get(self, request):
-#     #     return Response({"404": "GET NOT ALLOWED"})
-
-# class Deny(APIView):
-#     def post(self, request):
-#         datas = json.loads(request.body)
-#         invitation = datas['invitationid']
-#         applicant = datas['applicantid']
-#         # Apply = Application.Manager()
-#         # print(invitationID)
-#         # print(applicantid)
-#         Application.objects.update_or_create(invitationid = invitation, applicantid = applicant, Status = 'deny')     #should only do update
-#         return JsonResponse({"hoge": "hoge"})
-
-#     # def get(self, request):
-#     #     return Response({"404": "GET NOT ALLOWED"})
-# #{"invitationid": "22", "applicantid": "33"}
+    @action(methods=['post'], detail=True)
+    def denied(self, request):
+        SqlInstance = Application.objects.filter(invitationid = self.get_object().invitationid, applicantid = self.get_object().applicant)
+        SqlInstance.status = 'denied'
+        return Response('denied!')
