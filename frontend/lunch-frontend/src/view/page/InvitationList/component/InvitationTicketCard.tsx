@@ -213,7 +213,7 @@ const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: 
   return (
     <>
       <article className={c.root + " " + invitation.status} >
-        <img className={c.iconImg} src={forkImage} width="100" alt="とうもろこしのイラスト" />
+        <img className={c.iconImg} src="https://github.com/yousukeayada/general/tree/master/jphacks/img" width="100" alt="とうもろこしのイラスト" />
         <InvitationCard invitation={invitation} className={c.cardInnerAnimcation + (beforeClose ? " beforeClose" : "")} onClick={() => setOpen(!open)}/>
       </article>
       <Dialog

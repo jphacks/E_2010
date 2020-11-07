@@ -111,7 +111,7 @@ const InvitationCreate = () => {
       <div className={c.closeButton} onClick={handleCancel}><MdClose/></div>
       <div className={c.root}>
         <div className={c.form}>
-          <img className={c.stamp} src={stamp} width="100" alt="消印"/>
+          <img className={c.stamp} src="https://github.com/yousukeayada/general/blob/master/jphacks/img/stamp.png" width="100" alt="消印"/>
           <h2>食事のお供を募集する</h2>
           <TextField
             className={c.field}

@@ -37,7 +37,7 @@ const ProfileCard: React.FC<Props> = ({ profile, onClick, className="" }) => {
     <article className={c.cardInner + " " + className} onClick={onClick}>
       <div>プロフィール</div>
       <div className={c.upper}>
-        <img className={c.img} src={icon} alt="投稿者のアイコン画像" />
+        <img className={c.img} src="https://github.com/yousukeayada/general/blob/master/jphacks/img/icon1.png" alt="投稿者のアイコン画像" />
         <div>
           <div>{profile.name}</div>
           <div>{profile.university}</div>

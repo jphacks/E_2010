@@ -89,7 +89,7 @@ const Register = () => {
   return (
     <div className={c.root}>
       <div className={c.form}>
-        <img className={c.stamp} src={stamp} width="100" alt="消印" />
+        <img className={c.stamp} src="https://github.com/yousukeayada/general/blob/master/jphacks/img/icon1.png" width="100" alt="消印" />
         <h2>ユーザー登録</h2>
         <TextField
           className={c.field}
