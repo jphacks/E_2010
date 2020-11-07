@@ -13,7 +13,7 @@ const Entry = () => {
     <Router>
       <Switch>
         <UnAuthRoute exact path="/login" component={Login} />
-        <UnRegisterRoute exact path="/register" component={Register} />
+        <UnAuthRoute exact path="/register" component={Register} />
         <PrivateRoute exact path="/invitations" component={InvitationList} />
         <PrivateRoute exact path="/invitations/create" component={InvitationCreate} />
         <PrivateRoute exact path="/invitations/:invitationId" component={Login} />

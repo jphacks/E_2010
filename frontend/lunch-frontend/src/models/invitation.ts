@@ -10,7 +10,7 @@ type Invitation = {
   place: string
   tag: string[]
   createdat: DateTime
-  status: InvitationStatus
+  status: InvitationStatus | "mine"
 }
 
 export default Invitation
