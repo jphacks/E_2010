@@ -5,76 +5,12 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 # Create your models here.
-
-# class UserManager(BaseUserManager):
-    # def _create_user(self,username,password,email,**kwargs):
-    #     if not password:
-    #         raise ValueError("need password")
-    #     if not username:
-    #         raise ValueError("need username")
-    #     if not email:
-    #         raise ValueError("Mail Address")
-    #     user = self.model(username=username,email=email,**kwargs)
-    #     user.set_password(password)
-    #     user.save()
-    #     return user
-
-    # def create_user(self, username, email, password=None):
-    #     if not username:
-    #         raise ValueError('Users must have an username')
-    #     elif not email:
-    #         raise ValueError('Users must have an email')
-
-    #     user = self.model(
-    #         username = username,
-    #         email = self.normalize_email(email),
-    #     )
-    #     user.set_password(password)
-    #     user.save(using=self._db)
-    #     return user
-
-    # def create_superuser(self, username, email, password):
-    #     user = self.create_user(
-    #         username,
-    #         email,
-    #         password=password,
-    #     )
-    #     user.is_admin = True
-    #     user.save(using=self._db)
-    #     return user
-        # kwargs['is_superuser'] = True
-        # kwargs['is_staff'] = True
-        # user
-        # return self._create_user(username,password,email,**kwargs)
-
-# class User(AbstractBaseUser, PermissionsMixin):
-#     email = models.EmailField(unique=True,)
-#     username = models.CharField(max_length=100)
-#     password = models.CharField(max_length=18)
-#     university = models.CharField(max_length=100)
-#     research = models.TextField(max_length=300)
-    
-#     STATUS_GENDER = (
-#         ('male', '男'),
-#         ('female', '女'),
-#         ('other', 'その他'),
-#     )
-#     gender = models.CharField(choices=STATUS_GENDER, default='male', max_length=10)
-#     age = models.PositiveSmallIntegerField()
-#     position = models.CharField(max_length=100)
-#     self_introduction = models.TextField(max_length=300)
-#     birthday = models.DateField(null=True, blank=True)
-
-#     is_active = models.BooleanField(default=True)
-#     is_staff = models.BooleanField(default=False)
-#     is_admin = models.BooleanField(default=False)
-#     objects = UserManager()
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = ['username', 'password']
   
-  
+# User ###################################################
+
 # https://hombre-nuevo.com/python/python0048/
 class UserManager(BaseUserManager):
     """ユーザーマネージャー."""
@@ -146,41 +82,63 @@ class User(AbstractBaseUser, PermissionsMixin):
     position = models.CharField(max_length=100)
     self_introduction = models.TextField(max_length=300, null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
-  
+
     objects = UserManager()
-  
+
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['email']
-  
+
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
-  
-    # def get_full_name(self):
-    #     """Return the first_name plus the last_name, with a space in
-    #     between."""
-    #     full_name = '%s %s' % (self.first_name, self.last_name)
-    #     return full_name.strip()
-  
-    # def get_short_name(self):
-    #     """Return the short name for the user."""
-    #     return self.first_name
-  
+
+    # 未使用
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-class Application(models.Model):
-    # posterid = models.CharField(max_length=128)    #userid
-    invitationid = models.CharField(max_length=128)    #contentid
-    applicantid = models.CharField(max_length=128)    #applicantid
-    ApplyStatus = (
-      ('pending', '1'),
-      ('approve', '2'),
-      ('deny', '3'),)
-    Status = models.CharField(choices=ApplyStatus, max_length=10)
     # USERNAME_FIELD = 'id' としたことによるエラーの対処法
     # https://teratail.com/questions/98546
     def __str__(self):
         return str(self.id)
+
+###########################################################
+
+
+# Invitation ##############################################
+
+class Invitation(models.Model):
+    author = models.ForeignKey(User, related_name='invitations', on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    content = models.CharField(max_length=300, null=True, blank=True)
+    date = models.DateField()
+    place = models.CharField(max_length=100)
+    created_at = models.DateTimeField(default=timezone.now)
+    tags = models.CharField(max_length=100, null=True, blank=True)
+    
+    STATUS = (
+        ('seeking', '募集中'),
+        ('applied', '承認待ち'),
+        ('accepted', '承認済み'),
+    )
+    status = models.CharField(choices=STATUS, default='seeking', max_length=10)
+
+    def __str__(self):
+        return str(self.id)
+
+###########################################################
+
+
+# Application ##############################################
+class Application(models.Model):
+    # authorid = models.CharField(max_length=128)    #userid
+    invitation = models.ForeignKey(Invitation, related_name='applications', on_delete=models.CASCADE)
+    applicant = models.ForeignKey(User, related_name='applications', on_delete=models.CASCADE)
+    APPLICATION_STATUS = (
+      ('applied', '承認待ち'),
+      ('accepted', '承認済み'),
+      ('denied', '拒否'),
+    )
+    status = models.CharField(choices=APPLICATION_STATUS, max_length=10)
+    
