@@ -11,7 +11,7 @@ import json
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_fields = ('email',)
+    filter_fields = ('id', 'email', 'name', )
 
     @action(methods=['post'], detail=True)
     def login(self, request, pk=None):

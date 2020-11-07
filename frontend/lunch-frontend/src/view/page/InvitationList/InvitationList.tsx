@@ -10,7 +10,7 @@ import InvitationCard from './component/InvitationTicketCard'
 import ToggleBar from './component/ToggleBar'
 import { useRecoilValue } from 'recoil'
 import appUserAtom from '../../../interactor/appUser'
-import { fetchInvitationList, fetchMyInvitationList } from '../../../fetcher/invitationFetchers'
+import { fetchAcceptedInvitationList, fetchAppliedInvitationList, fetchInvitationList, fetchMyInvitationList } from '../../../fetcher/invitationFetchers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,10 +68,12 @@ const InvitationListInner: React.FC<InnerProps> = ({ filterType, beforeClose }) 
   if(appUser == null) throw new Error()
   
   const { data: invitations } = useSWR<(Invitation | MyInvitation)[]>("/invitations/list", fetchInvitationList(appUser.id), { suspense: true })
+  const { data: appliedInvitations } = useSWR<Invitation[]>("/invitation/applied", fetchAppliedInvitationList(appUser.id), { suspense: true })
   const { data: myInvitations } = useSWR<(Invitation | MyInvitation)[]>("/invitations/self", fetchMyInvitationList(appUser.id), { suspense: true })
-  
+  const { data: acceptedInvitations } = useSWR<(Invitation | MyInvitation)[]>("/invitations/accepted", fetchAcceptedInvitationList(appUser), { suspense: true })
+  console.log(acceptedInvitations)
   const filteredInvitations =
-    filterType === "mine" ? myInvitations ?? [] : invitations?.filter(({ status }) => status === filterType) ?? []
+    filterType === "mine" ? myInvitations ?? [] : filterType === "applied" ? appliedInvitations ?? [] : filterType === "approved" ? acceptedInvitations ?? [] : invitations?.filter(({ status }) => status === filterType) ?? []
 
   return (
     <>

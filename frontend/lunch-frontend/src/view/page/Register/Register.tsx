@@ -67,6 +67,7 @@ const Register = () => {
   const c = useStyles()
   const [appUser, setAppUser] = useRecoilState(appUserAtom)
   const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
   const [university, setUniversity] = useState("")
   const [gender, setGender] = useState("")
   const [age, setAge] = useState(20)
@@ -76,13 +77,11 @@ const Register = () => {
   const [research, setResearch] = useState("")
   const [selfIntroduction, setSelfIntroduction] = useState("")
 
-  const canSubmit = name.length > 0 && university.length > 0 && research.length > 0
-    && gender != null && position.length > 0
+  const canSubmit = email.length > 0 && name.length > 0 && university.length > 0 && position.length > 0
 
   const handleSubmit = async () => {
-    if (canSubmit && appUser != null) {
-      const newAppUser = { ...appUser, profile: { name, university, gender, age, position, birthday: DateTime.fromFormat(birthday, "yyyy-MM-dd"), research, selfIntroduction } }
-      const registeredAppUser = await register(newAppUser)
+    if (canSubmit) {
+      const registeredAppUser = await register(email, name, university, gender, age, position,DateTime.fromFormat(birthday, "yyyy-MM-dd"), research, selfIntroduction )
       setAppUser(registeredAppUser)
     }
   }
@@ -104,10 +103,29 @@ const Register = () => {
         <TextField
           className={c.field}
           required
+          label="メールアドレス"
+          variant="outlined"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+        />
+        <TextField
+          className={c.field}
+          required
           label="大学名"
           variant="outlined"
           value={university}
           onChange={(e) => setUniversity(e.target.value)}
+          fullWidth
+        />
+
+        <TextField
+          className={c.field}
+          required
+          label="役職"
+          variant="outlined"
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
           fullWidth
         />
 
@@ -124,7 +142,6 @@ const Register = () => {
 
         <TextField
           className={c.field}
-          required
           select
           label="性別"
           variant="outlined"
@@ -135,7 +152,7 @@ const Register = () => {
           <MenuItem value="male">
             男性
           </MenuItem>
-          <MenuItem value="femail">
+          <MenuItem value="female">
             女性
           </MenuItem>
           <MenuItem value="others">
@@ -145,17 +162,6 @@ const Register = () => {
 
         <TextField
           className={c.field}
-          required
-          label="役職"
-          variant="outlined"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
-          fullWidth
-        />
-
-        <TextField
-          className={c.field}
-          required
           label="研究内容"
           variant="outlined"
           value={research}
