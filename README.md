@@ -1,6 +1,6 @@
 # Lunch Link Learning
 
-[Let's go for lunch!](https://salty-scrubland-05174.herokuapp.com/)
+[Let's go for lunch!](https://salty-scrubland-05174.herokuapp.com/register)（ユーザ登録）
 
 <!-- [![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2020/09/JPHACKS2020_ogp.jpg)](https://www.youtube.com/watch?v=G5rULR53uMk) -->
 
@@ -22,11 +22,11 @@
 
 ### 製品説明（具体的な製品の説明）
 ### 特長
-1. プロフィール
+#### 1. プロフィール
 所属大学や研究、ポジションをプロフィールに登録することで、様々な人と出会える。
-2. 募集作成
+#### 2. 募集作成
 タイトルや日時、場所、タグなどをつけて募集を作成することができます。
-3. 承認・拒否
+#### 3. 承認・拒否
 自分の作成した募集に申請がきた場合、相手のプロフィールを見て承認するか拒否するか選択することができます。
 
 ### 解決出来ること
@@ -44,6 +44,8 @@
 * 
 
 ## 開発技術
+
+![logo2](./logo2.png)
 ### 活用した技術
 #### フロントエンド 
 - React、TypeScript
