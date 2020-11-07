@@ -5,6 +5,8 @@ import { DateTime } from 'luxon'
 import stamp from '../../../asset/stamp.png'
 import { MdClose } from 'react-icons/md'
 import { createInvitation } from '../../../fetcher/invitationFetchers'
+import { useRecoilValue } from 'recoil'
+import appUserAtom from '../../../interactor/appUser'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,17 +86,18 @@ const useStyles = makeStyles((theme) => ({
 
 const InvitationCreate = () => {
   const c = useStyles()
+  const appUser = useRecoilValue(appUserAtom)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [place, setPlace] = useState("")
   const [date, setDate] = useState(DateTime.local().toFormat("yyyy-MM-dd"))
-  const [tags, setTags] = useState("")
+  const [tags, setTags] = useState<string[]>([])
 
   const history = useHistory()
 
   const handleSubmit = async () => {
-    if(canSubmit){
-      await createInvitation()
+    if(canSubmit && appUser != null){
+      await createInvitation(appUser.id, title, content, place, DateTime.fromFormat(date, "yyyy-MM-dd"), tags)
       history.goBack()
     }
   }
@@ -156,22 +159,22 @@ const InvitationCreate = () => {
               className={c.field}
               label="タグ1"
               variant="outlined"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              value={tags[0]}
+              onChange={(e) => setTags([e.target.value, tags[1], tags[2]])}
             />
             <TextField
               className={c.field}
               label="タグ2"
               variant="outlined"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              value={tags[1]}
+              onChange={(e) => setTags([tags[0], e.target.value, tags[2]])}
             />
             <TextField
               className={c.field}
               label="タグ3"
               variant="outlined"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              value={tags[2]}
+              onChange={(e) => setTags([tags[0], tags[1], e.target.value])}
             />
           </div>
         </div>

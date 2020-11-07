@@ -1,10 +1,15 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles } from '@material-ui/core'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, Suspense, useState } from 'react'
 import Invitation from '../../../../models/invitation'
 import MyInvitation from '../../../../models/myInvitation'
 import forkImage from "../../../../asset/corn.png"
 import InvitationCard from '../../../component/InvitationCard'
 import ProfileCard from '../../../component/ProfileCard'
+import appUserAtom from '../../../../interactor/appUser'
+import { useRecoilValue } from 'recoil'
+import axios from "axios"
+import useSWR from 'swr'
+import { DateTime } from 'luxon'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -158,6 +163,7 @@ const useStyles = makeStyles((theme) => ({
   dialogContent: {
     display: "flex",
     flexDirection: "column",
+    minWidth: "600px",
   },
 
   invitationCard: {
@@ -186,8 +192,24 @@ type Props = {
 }
 
 const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: invitation}) => {
-  const [open, setOpen] = useState(false)
   const c = useStyles()
+  const appUser = useRecoilValue(appUserAtom)
+  const [open, setOpen] = useState(false)
+
+  const handleAction = async () => {
+    if(appUser == null) return
+    if(invitation.status === "default"){
+      await axios.post(`/api/invitations/${invitation.id}/apply/`, {
+        user_id: appUser.id
+      })
+    }else if(invitation.status === "applied"){
+      const res = await axios.get(`/api/applications/?invitation=${invitation.id}&applicant=${appUser.id}`)
+      const applicationId = res.data[0].id
+      await axios.put(`/api/applications/${applicationId}/cancel/`)
+    }
+    setOpen(false)
+  }
+
   return (
     <>
       <article className={c.root + " " + invitation.status} >
@@ -208,14 +230,17 @@ const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: 
           {
             invitation.status === "mine" ? (
               <div className={c.applicantsArea}>{
-                invitation.applicants.map((profile, i) => (
-                  <Fragment key={i}>
-                    <ProfileCard profile={profile} className={c.profileCard + " " + c.profileListItem} />
-                    <div className={c.approveButtonWrapper}>
-                      <Button color="default" variant="contained" className={c.approveButton}>承認する</Button>
-                    </div>
-                  </Fragment>
-                ))
+                <Suspense fallback={"LOADING..."}>
+                  <ApplicantList invitation={invitation as Invitation}/>
+                </Suspense>
+                // invitation.applicants.map((profile, i) => (
+                //   <Fragment key={i}>
+                //     <ProfileCard profile={profile} className={c.profileCard + " " + c.profileListItem} />
+                //     <div className={c.approveButtonWrapper}>
+                //       <Button color="default" variant="contained" className={c.approveButton}>承認する</Button>
+                //     </div>
+                //   </Fragment>
+                // ))
               }</div>
             ) : (
               <ProfileCard profile={invitation.hostProfile} className={c.profileCard}/>
@@ -228,7 +253,7 @@ const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: 
             </Button>
             {
               (invitation.status === "default" || invitation.status === "applied") &&
-              <Button onClick={() => setOpen(false)} color="primary">{
+              <Button onClick={handleAction} color="primary">{
                 invitation.status === "default" ? "応募する" :
                 invitation.status === "applied" ? "応募キャンセル" : ""
               }</Button>
@@ -236,6 +261,65 @@ const InvitationTicketCard: React.FC<Props> = ({ order, beforeClose, invitaion: 
         </DialogActions>
       </Dialog>
     </>
+  )
+}
+
+type AppProps = {
+  invitation: Invitation
+}
+
+const ApplicantList: React.FC<AppProps> = ({invitation}) => {
+  const c = useStyles()
+  const { data } = useSWR("/invitation" + invitation.id, async () => {
+    const res = await axios.get<any[]>(`/api/applications/?invitation=${invitation.id}`)
+    console.log(res)
+    const applicants = res.data.map(data => data.applicant)
+    console.log(applicants)
+    const applicantsProfile = await Promise.allSettled(
+      applicants.map((userId) => axios.get(`/api/users/?id=${userId}`))
+    )
+    console.log(applicantsProfile)
+    return applicantsProfile
+  }, { suspense: true })
+
+  const handleApprove = (id: number) => async () => {
+    const res = await axios.get<any[]>(`/api/applications/?invitation=${invitation.id}`)
+    console.log(id)
+    const appId = res.data.find(data => data.applicant === id).id
+    const applicantId = res.data.find(data => data.applicant === id).applicant
+    await axios.put(`/api/applications/${appId}/accept/`, {
+      applicant_id: applicantId
+    })
+  }
+
+  if(data == null) return <div>LOADING...</div>
+  console.log(data)
+  console.log((data as any[]).map((data: any) => data.value.data))
+
+
+  return (
+    <>{
+      (data as any[]).map((data: any) => data.value.data).flat().map(({ id, name, university, research, gender, age, position, self_introduction, birthday}: any, i: any) => {
+      const profile = {
+        name,
+        university,
+        research,
+        gender,
+        age: Number.isInteger(age) ? parseInt(age) : 20,
+        position,
+        selfIntroduction: self_introduction,
+        birthday: DateTime.local(),
+      }
+      return (
+        <Fragment key={i}>
+          <ProfileCard profile={profile} className={c.profileCard + " " + c.profileListItem} />
+          <div className={c.approveButtonWrapper}>
+            <Button color="default" variant="contained" className={c.approveButton} onClick={handleApprove(id)}>承認する</Button>
+          </div>
+        </Fragment>
+      )
+    })
+  }</>
   )
 }
 
