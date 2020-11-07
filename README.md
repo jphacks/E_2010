@@ -1,35 +1,61 @@
 # Lunch Link Learning
 
+[Let's go for lunch!](https://salty-scrubland-05174.herokuapp.com/)
 
-[![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2020/09/JPHACKS2020_ogp.jpg)](https://www.youtube.com/watch?v=G5rULR53uMk)
+<!-- [![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2020/09/JPHACKS2020_ogp.jpg)](https://www.youtube.com/watch?v=G5rULR53uMk) -->
+
+![logo](./logo.jpg)
+
 
 ## 製品概要
+- ぼっちご飯したくない、友だちを作りたい、情報交換をしたい、という大学生や大学教員向けの、大学の学食などで一緒に食事することができるマッチングアプリ。
+
 ### 背景(製品開発のきっかけ、課題等）
+#### ターゲット
+- 大学生、大学教員
+
+#### ターゲットが抱える課題
+- 大学生：コロナ禍の影響もあり友だちができない（特に新入生）、人とのつながりが少ない、授業やサークルなどの情報が欲しい、研究について詳しく知りたい。
+- 大学教員：学生と話したい（イメージ）、意欲のある優秀な学生が欲しい。
+- 大学の食堂：利用者が減っている。
+- 誰かとご飯を食べたい。
+
 ### 製品説明（具体的な製品の説明）
 ### 特長
-####1. 特長1
-####2. 特長2
-####3. 特長3
+1. プロフィール
+所属大学や研究、ポジションをプロフィールに登録することで、様々な人と出会える。
+2. 募集作成
+タイトルや日時、場所、タグなどをつけて募集を作成することができます。
+3. 承認・拒否
+自分の作成した募集に申請がきた場合、相手のプロフィールを見て承認するか拒否するか選択することができます。
 
 ### 解決出来ること
+- 大学生：横の繋がりが増えることで、情報交換を行える。違う学年、違う大学の人と繋がることができる。研究について知ることで、研究室選びの参考になる。
+- 大学教員：学生の現状を知ることができる。優秀な学生と早めに出会える。学生に自分の研究を知ってもらえる。
+- 大学の食堂：利用者が増える。
+
 ### 今後の展望
+- 拒否された相手に何度も申請を遅れないようにする。
+- チャット機能を実装する。
+- 検索機能をより充実させる．
+
 ### 注力したこと（こだわり等）
 * 
 * 
 
 ## 開発技術
 ### 活用した技術
-#### API・データ
-* 
-* 
+#### フロントエンド 
+- React、TypeScript
 
-#### フレームワーク・ライブラリ・モジュール
-* 
-* 
+#### バックエンド
+- Django、Python
 
-#### デバイス
-* 
-* 
+#### インフラ、DB
+- Heroku
+- Heroku Postgres
+
+![構成](./構成.jpg)
 
 ### 独自技術
 #### ハッカソンで開発した独自機能・技術
@@ -39,56 +65,3 @@
 #### 製品に取り入れた研究内容（データ・ソフトウェアなど）（※アカデミック部門の場合のみ提出必須）
 * 
 * 
-
-## 開発
-* Django
-First time
-
-```
-pip install -r requirements.txt
-```
-
-1. Migration
-```
-mysql -u<username> -p<password>
-mysql> create database lunch;
-
-python3 manage.py migrate
-```
-
-2. install package (js)
-```
-cd frontend/lunch-frontend
-npm install
-```
-
-2. build react
-```
-cd frontend/lunch-frontend
-npm run-script build
-```
-
-3. Run
-```
-python3 manage.py runserver
-```
-
-4. Access
-```
-curl http://localhost:8000
-curl http://localhost:8000/admin
-curl http://localhost:8000/api/users/
-curl http://localhost:8000/api/users/1/
-```
-- admin ページにはスーパーユーザが必要
-```
-python manage.py createsuperuser
-```
-
-- デプロイ
-  - `local_settings.py` を作り、開発用、本番用で設定を分ける
-  - `heroku config:set SECRET_KEY=xxxx`
-  - https://qiita.com/frosty/items/66f5dff8fc723387108c
-  - アプリ消した後同じ名前のものをすぐ作るとおかしくなる（設定が残ったままになってる？）
-  - Web から消すとGitの設定が残るので `git remote rm heroku` する
-  - `heroku apps:destroy --app <appname>` だとGitも消える
